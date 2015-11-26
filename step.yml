@@ -1,0 +1,109 @@
+title: Submit calabash android test to Xamarin Test Cloud
+summary: Submit calabash android test to Xamarin Test Cloud
+description: Submit calabash android test to Xamarin Test Cloud
+website: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android
+source_code_url: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android
+support_url: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android/issues
+host_os_tags:
+  - osx-10.10
+project_type_tags:
+  - xamarin
+type_tags:
+  - test
+is_requires_admin_user: true
+is_always_run: false
+is_skippable: false
+dependencies: []
+run_if: ""
+inputs:
+  - calabash_features:
+    opts:
+      title: Path to Calabash features folder
+      description: |
+        Path to Calabash features folder
+      is_required: true
+      is_expand: true
+  - apk_path:
+    opts:
+      title: APK path
+      description: APK path
+      is_required: true
+      is_expand: true
+  - xamarin_user:
+    opts:
+      title: "User email"
+      summary: "User email"
+      description: |
+        The e-mail address of the team member submitting the tests.
+      is_expand: true
+      is_required: true
+      is_dont_change_value: false
+  - test_cloud_api_key:
+    opts:
+      title: "Api key"
+      summary: "Api key"
+      description: |
+        Api key.
+      is_expand: true
+      is_required: true
+      is_dont_change_value: false
+  - test_cloud_devices:
+    opts:
+      title: "Device selection id"
+      summary: "Device selection id"
+      description: |
+        Device selection id from the Test Cloud upload dialog.
+      is_expand: true
+      is_required: true
+      is_dont_change_value: false
+  - test_cloud_is_async: "yes"
+    opts:
+      title: "Don't wait for cloud test run to complete"
+      summary: "Don't wait for cloud test run to complete"
+      description: |
+        Don't wait for cloud test run to complete.
+      is_expand: true
+      is_required: false
+      is_dont_change_value: false
+      value_options:
+      - "yes"
+      - "no"
+  - test_cloud_series: "master"
+    opts:
+      title: "Test series"
+      summary: "Test series"
+      description: |
+        Test series.
+      is_expand: true
+      is_required: false
+      is_dont_change_value: false
+  - other_parameters:
+    opts:
+      title: "Other parameters"
+      summary: "Other parameters"
+      description: |
+        Other parameters to pass Xamarin Test Cloud.
+
+        Available parameters:
+        - --app-name APP-NAME
+        - --category NUNIT-CATEGORY
+        - --fixture NUNIT-FIXTURE
+        - --sign-info SIGN-INFO-SI-PATH
+
+        Example:
+        '--app-name <APP-NAME> --category <NUNIT-CATEGORY> --sign-info <SIGN-INFO-SI-PATH>
+        '--app-name <APP-NAME> --fixture <NUNIT-FIXTURE> --sign-info <SIGN-INFO-SI-PATH>
+      is_expand: true
+      is_required: false
+      is_dont_change_value: false
+outputs:
+  - BITRISE_XAMARIN_TEST_RESULT:
+    opts:
+      title: Result of the tests. 'succeeded' or 'failed'.
+      value_options:
+      - succeeded
+      - failed
+  - BITRISE_XAMARIN_TEST_FULL_RESULTS_TEXT:
+    opts:
+      title: ""
+      description: ""
