@@ -102,7 +102,7 @@ test_cloud_cmd << '--async' if options[:async]
 test_cloud_cmd << "--series=#{options[:series]}" if options[:series]
 test_cloud_cmd << options[:other_parameters] if options[:other_parameters]
 
-test_cloud_cmd_copy = test_cloud_cmd
+test_cloud_cmd_copy = test_cloud_cmd.dup
 test_cloud_cmd_copy[gemfile_detected ? 2 : 1] = "***"
 
 puts
