@@ -94,18 +94,22 @@ fail_with_message('calabash-android build -- failed') unless $?.success?
 
 test_cloud_cmd = []
 test_cloud_cmd << "bundle exec" if gemfile_detected
-test_cloud_cmd << "test-cloud submit #{options[:apk_path]} #{options[:api_key]}"
-test_cloud_cmd << "--user #{options[:user]}"
-test_cloud_cmd << "--devices #{options[:devices]}"
+test_cloud_cmd << "test-cloud submit \"#{options[:apk_path]}\""
+test_cloud_cmd << options[:api_key]
+test_cloud_cmd << "--user=#{options[:user]}"
+test_cloud_cmd << "--devices=#{options[:devices]}"
 test_cloud_cmd << '--async' if options[:async]
-test_cloud_cmd << "--series #{options[:series]}" if options[:series]
-test_cloud_cmd << "#{options[:other_parameters]}" if options[:other_parameters]
+test_cloud_cmd << "--series=#{options[:series]}" if options[:series]
+test_cloud_cmd << options[:other_parameters] if options[:other_parameters]
+
+test_cloud_cmd_copy = test_cloud_cmd
+test_cloud_cmd_copy[gemfile_detected ? 2 : 1] = "***"
 
 puts
-puts test_cloud_cmd.join(" ")
+puts test_cloud_cmd_copy.join(" ")
 system(test_cloud_cmd.join(" "))
 fail_with_message('test-cloud -- failed') unless $?.success?
 
 puts
-puts '(i) The result is: succeeded'
+puts "\e[32mSuccess\e[0m"
 system('envman add --key BITRISE_XAMARIN_TEST_RESULT --value succeeded')
