@@ -65,29 +65,47 @@ puts " * async: #{options[:async]}"
 puts " * series: #{options[:series]}"
 puts " * other_parameters: #{options[:other_parameters]}"
 
-#
-# Build Request
-request = "test-cloud submit #{options[:apk_path]} #{options[:api_key]}"
-request += " --user #{options[:user]}"
-request += " --devices #{options[:devices]}"
-request += ' --async' if options[:async]
-request += " --series #{options[:series]}" if options[:series]
-request += " #{options[:other_parameters]}" if options[:other_parameters]
-
-puts
-puts "request: #{request}"
-
 base_directory = File.dirname(options[:features])
 Dir.chdir(base_directory) do
-  puts
-  puts "calabash-android resign #{options[:apk_path]} -v"
-  system("calabash-android resign #{options[:apk_path]} -v")
+  # Check if there is a Gemfile in the directory
+  gemfile_detected = File.exists? "Gemfile"
+
+  if gemfile_detected
+    puts
+    puts "bundle install"
+    system("bundle install")
+  end
+
+  resign_cmd = []
+  resign_cmd << "bundle exec" if gemfile_detected
+  resign_cmd << "calabash-android resign #{options[:apk_path]} -v"
 
   puts
-  puts "calabash-android build #{options[:apk_path]}"
-  system("calabash-android build #{options[:apk_path]}")
+  puts resign_cmd.join(" ")
+  system(resign_cmd.join(" "))
+  fail_with_message('calabash-android resign -- failed') unless $?.success?
 
-  system(request)
+  build_cmd = []
+  build_cmd << "bundle exec" if gemfile_detected
+  build_cmd << "calabash-android build #{options[:apk_path]} -v"
+
+  puts
+  puts build_cmd.join(" ")
+  system(build_cmd.join(" "))
+  fail_with_message('calabash-android build -- failed') unless $?.success?
+
+  test_cloud_cmd = []
+  test_cloud_cmd << "bundle exec" if gemfile_detected
+  test_cloud_cmd << "test-cloud submit #{options[:apk_path]} #{options[:api_key]}"
+  test_cloud_cmd << "--user #{options[:user]}"
+  test_cloud_cmd << "--devices #{options[:devices]}"
+  test_cloud_cmd << '--async' if options[:async]
+  test_cloud_cmd << "--series #{options[:series]}" if options[:series]
+  test_cloud_cmd << "#{options[:other_parameters]}" if options[:other_parameters]
+
+  puts
+  puts test_cloud_cmd.join(" ")
+  system(test_cloud_cmd.join(" "))
   fail_with_message('test-cloud -- failed') unless $?.success?
 end
 
