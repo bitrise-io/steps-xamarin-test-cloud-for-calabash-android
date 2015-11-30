@@ -18,9 +18,7 @@ end
 #
 # Input validation
 options = {
-  features: nil,
   apk_path: nil,
-  dsym_path: nil,
   api_key: nil,
   user: nil,
   devices: nil,
@@ -31,7 +29,6 @@ options = {
 
 parser = OptionParser.new do|opts|
   opts.banner = 'Usage: step.rb [options]'
-  opts.on('-a', '--feautes calabash', 'Calabash features') { |a| options[:features] = a unless a.to_s == '' }
   opts.on('-c', '--api key', 'API key') { |c| options[:api_key] = c unless c.to_s == '' }
   opts.on('-b', '--user user', 'User') { |b| options[:user] = b unless b.to_s == '' }
   opts.on('-d', '--devices devices', 'Devices') { |d| options[:devices] = d unless d.to_s == '' }
@@ -55,9 +52,7 @@ fail_with_message('devices not specified') unless options[:devices]
 # Print configs
 puts
 puts '========== Configs =========='
-puts " * features: #{options[:features]}"
 puts " * apk_path: #{options[:apk_path]}"
-puts " * dsym_path: #{options[:dsym_path]}"
 puts ' * api_key: ***'
 puts " * user: #{options[:user]}"
 puts " * devices: #{options[:devices]}"
@@ -65,49 +60,52 @@ puts " * async: #{options[:async]}"
 puts " * series: #{options[:series]}"
 puts " * other_parameters: #{options[:other_parameters]}"
 
-base_directory = File.dirname(options[:features])
-Dir.chdir(base_directory) do
-  # Check if there is a Gemfile in the directory
-  gemfile_detected = File.exists? "Gemfile"
+# Check if there is a Gemfile in the directory
+gemfile_detected = File.exists? "Gemfile"
 
-  if gemfile_detected
-    puts
-    puts "bundle install"
-    system("bundle install")
-  end
-
-  resign_cmd = []
-  resign_cmd << "bundle exec" if gemfile_detected
-  resign_cmd << "calabash-android resign #{options[:apk_path]} -v"
-
+if gemfile_detected
   puts
-  puts resign_cmd.join(" ")
-  system(resign_cmd.join(" "))
-  fail_with_message('calabash-android resign -- failed') unless $?.success?
+  puts "bundle install"
+  system("bundle install")
+else
+  puts "gem install calabash-android"
+  system("gem install calabash-android")
 
-  build_cmd = []
-  build_cmd << "bundle exec" if gemfile_detected
-  build_cmd << "calabash-android build #{options[:apk_path]} -v"
-
-  puts
-  puts build_cmd.join(" ")
-  system(build_cmd.join(" "))
-  fail_with_message('calabash-android build -- failed') unless $?.success?
-
-  test_cloud_cmd = []
-  test_cloud_cmd << "bundle exec" if gemfile_detected
-  test_cloud_cmd << "test-cloud submit #{options[:apk_path]} #{options[:api_key]}"
-  test_cloud_cmd << "--user #{options[:user]}"
-  test_cloud_cmd << "--devices #{options[:devices]}"
-  test_cloud_cmd << '--async' if options[:async]
-  test_cloud_cmd << "--series #{options[:series]}" if options[:series]
-  test_cloud_cmd << "#{options[:other_parameters]}" if options[:other_parameters]
-
-  puts
-  puts test_cloud_cmd.join(" ")
-  system(test_cloud_cmd.join(" "))
-  fail_with_message('test-cloud -- failed') unless $?.success?
+  puts "gem install xamarin-test-cloud"
+  system("gem install xamarin-test-cloud")
 end
+
+resign_cmd = []
+resign_cmd << "bundle exec" if gemfile_detected
+resign_cmd << "calabash-android resign #{options[:apk_path]} -v"
+
+puts
+puts resign_cmd.join(" ")
+system(resign_cmd.join(" "))
+fail_with_message('calabash-android resign -- failed') unless $?.success?
+
+build_cmd = []
+build_cmd << "bundle exec" if gemfile_detected
+build_cmd << "calabash-android build #{options[:apk_path]} -v"
+
+puts
+puts build_cmd.join(" ")
+system(build_cmd.join(" "))
+fail_with_message('calabash-android build -- failed') unless $?.success?
+
+test_cloud_cmd = []
+test_cloud_cmd << "bundle exec" if gemfile_detected
+test_cloud_cmd << "test-cloud submit #{options[:apk_path]} #{options[:api_key]}"
+test_cloud_cmd << "--user #{options[:user]}"
+test_cloud_cmd << "--devices #{options[:devices]}"
+test_cloud_cmd << '--async' if options[:async]
+test_cloud_cmd << "--series #{options[:series]}" if options[:series]
+test_cloud_cmd << "#{options[:other_parameters]}" if options[:other_parameters]
+
+puts
+puts test_cloud_cmd.join(" ")
+system(test_cloud_cmd.join(" "))
+fail_with_message('test-cloud -- failed') unless $?.success?
 
 puts
 puts '(i) The result is: succeeded'
