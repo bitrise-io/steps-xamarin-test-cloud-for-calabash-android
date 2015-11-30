@@ -42,7 +42,6 @@ parser = OptionParser.new do|opts|
 end
 parser.parse!
 
-fail_with_message('No features folder found') unless options[:features] && File.exist?(options[:features])
 fail_with_message('No apk found') unless options[:apk_path] && File.exist?(options[:apk_path])
 fail_with_message('api_key not specified') unless options[:api_key]
 fail_with_message('user not specified') unless options[:user]
