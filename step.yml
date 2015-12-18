@@ -1,9 +1,9 @@
 title: Submit calabash android test to Xamarin Test Cloud
 summary: Submit calabash android test to Xamarin Test Cloud
 description: Submit calabash android test to Xamarin Test Cloud
-website: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android
-source_code_url: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android
-support_url: https://github.com/godrei/steps-xamarin-test-cloud-for-calabash-android/issues
+website: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android
+source_code_url: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android
+support_url: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android/issues
 host_os_tags:
   - osx-10.10
 project_type_tags:
@@ -16,7 +16,7 @@ is_skippable: false
 dependencies: []
 run_if: ""
 inputs:
-  - apk_path:
+  - apk_path: $BITRISE_APK_PATH
     opts:
       title: APK path
       description: APK path
@@ -98,5 +98,5 @@ outputs:
       - failed
   - BITRISE_XAMARIN_TEST_FULL_RESULTS_TEXT:
     opts:
-      title: ""
+      title: Result of the tests.
       description: ""
