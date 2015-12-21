@@ -23,7 +23,6 @@ workflows:
           but the step would use the default value specified in the `step.yml`
           file if you would not specify another value.
         inputs:
-        - calabash_features: $CALABASH_FEATURES
         - apk_path: $APK_PATH
         - xamarin_user: $USER
         - test_cloud_api_key: $API_KEY
