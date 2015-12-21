@@ -74,6 +74,14 @@ else
   system("gem install xamarin-test-cloud")
 end
 
+debug_keystore = "#{ENV['HOME']}/.android/debug.keystore"
+unless File.exists?(debug_keystore)
+  puts
+  puts "Debug keystore not found at path: #{debug_keystore}"
+  puts "Generating debug keystore"
+  `keytool -genkey -v -keystore "#{debug_keystore}" -alias androiddebugkey -storepass android -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"`
+end
+
 resign_cmd = []
 resign_cmd << "bundle exec" if gemfile_detected
 resign_cmd << "calabash-android resign #{options[:apk_path]} -v"
