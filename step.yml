@@ -1,6 +1,6 @@
-title: Submit calabash android test to Xamarin Test Cloud
-summary: Submit calabash android test to Xamarin Test Cloud
-description: Submit calabash android test to Xamarin Test Cloud
+title: Submit Calabash Android test to Xamarin Test Cloud
+summary: Submit Calabash Android test to Xamarin Test Cloud step
+description: Submit Calabash Android test to Xamarin Test Cloud step
 website: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android
 source_code_url: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android
 support_url: https://github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android/issues
