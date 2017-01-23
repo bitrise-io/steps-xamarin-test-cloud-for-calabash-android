@@ -1,14 +1,15 @@
 #!/bin/bash
+set -ex
+THIS_SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-this_script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+tmp_gopath_dir="$(mktemp -d)"
 
-set -e
+go_package_name="github.com/bitrise-steplib/steps-xamarin-test-cloud-for-calabash-android"
+full_package_path="${tmp_gopath_dir}/src/${go_package_name}"
+mkdir -p "${full_package_path}"
 
-ruby "${this_script_dir}/step.rb" \
-  -b "${xamarin_user}" \
-  -c "${test_cloud_api_key}" \
-  -d "${test_cloud_devices}" \
-  -e "${test_cloud_is_async}" \
-  -f "${test_cloud_series}" \
-  -g "${other_parameters}" \
-  -i "${apk_path}"
+rsync -avh --quiet "${THIS_SCRIPT_DIR}/" "${full_package_path}/"
+
+export GOPATH="${tmp_gopath_dir}"
+export GO15VENDOREXPERIMENT=1
+go run "${full_package_path}/main.go"
